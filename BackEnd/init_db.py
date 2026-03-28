@@ -3,7 +3,7 @@ import logging
 from db.database import engine, Base
 # Import các model của bạn. Việc import này là BẮT BUỘC để SQLAlchemy
 # nhận biết được các model và tạo bảng tương ứng.
-from schemas.user import User
+from schemas.user import user as User
 
 # Cấu hình logging để xem thông báo
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
