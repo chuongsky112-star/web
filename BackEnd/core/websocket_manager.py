@@ -2,8 +2,7 @@ import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict, Any, Optional
 import asyncio
-from threading import Timer
-from api import auth
+from core import security
 # Cấu hình logging cơ bản để theo dõi các sự kiện WebSocket
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -25,10 +24,9 @@ class ConnectionManager:
             return False
         try:
             # Sử dụng hàm xác thực đã có trong module `auth`.
-            # Hàm này sẽ ném ra lỗi nếu token không hợp lệ.
-            auth.verify_token_for_websocket(token)
-            return True
-        except Exception as e:
+            # Hàm này sẽ trả về None nếu token không hợp lệ.
+            return security.decode_token(token) is not None
+        except Exception as e: # Bắt các lỗi không mong muốn khác
             logger.debug(f"Token validation failed for UI websocket: {e}")
             return False
 

@@ -6,7 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import các module
 from core import websocket_manager
 from api import auth
+from core import security
 from config import middleware
+from db.database import engine, Base
 
 # Khởi tạo ứng dụng FastAPI.
 app = FastAPI()
@@ -36,7 +38,15 @@ app.middleware("http")(middleware.add_no_cache_headers)
 # --- Đăng ký các API Routers ---
 # Các route API cụ thể phải được đăng ký trước route "catch-all" của StaticFiles.
 app.include_router(websocket_manager.router)
-app.include_router(auth.router, prefix="/api")
+app.include_router(auth.router, prefix="/api") # Router cho /login, /register
+
+# Tạo bảng trong database (nếu chưa tồn tại) khi ứng dụng khởi động
+Base.metadata.create_all(bind=engine)
+
+# Endpoint ví dụ để kiểm tra auth guard
+@app.get("/api/me", tags=["Users"])
+def read_users_me(current_user: dict = Depends(security.get_current_user)):
+    return current_user
 
 if __name__ == "__main__":
     # Cấu hình cho deployment trên các nền tảng như Render:
