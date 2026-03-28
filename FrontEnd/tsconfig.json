@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    /* Cơ bản */
+    "target": "ES2020", // Biên dịch ra mã JavaScript tương thích với ES2020
+    "module": "ESNext", // Sử dụng hệ thống module JavaScript hiện đại
+    "outDir": "./public/js", // Thư mục chứa file .js sau khi biên dịch
+    "rootDir": "./src", // Thư mục gốc chứa file .ts nguồn
+
+    /* Kiểm tra kiểu nghiêm ngặt */
+    "strict": true, // Bật tất cả các tùy chọn kiểm tra kiểu nghiêm ngặt
+
+    /* Tương tác Module */
+    "esModuleInterop": true, // Cho phép tương tác tốt hơn giữa các loại module
+    "forceConsistentCasingInFileNames": true, // Bắt buộc tên file phải nhất quán về kiểu chữ
+    "skipLibCheck": true // Bỏ qua việc kiểm tra kiểu của các file thư viện (.d.ts)
+  },
+  "include": ["src/**/*"] // Chỉ biên dịch các file trong thư mục 'src'
+}

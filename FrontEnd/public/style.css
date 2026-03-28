@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --primary-color: #4a90e2;
+    --primary-hover-color: #357abd;
+    --background-color: #2c3e50;
+    /* Màu nền tối dự phòng */
+    --card-background-color: #ffffff;
+    --text-color: #333333;
+    --input-border-color: #d9d9d9;
+    --input-focus-border-color: #4a90e2;
+    --error-color: #f44336;
+    --success-color: #4caf50;
+    --info-color: #2196F3;
+}
+
+/* --- Global Reset & Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    /* Một dải màu tối, hiện đại và dịu mắt hơn */
+    background: linear-gradient(135deg, #2c3e50, #1d2b3a);
+    background-attachment: fixed;
+    /* Giữ cho dải màu cố định khi cuộn trang */
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* --- Login Page Specific Styles --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+}
+
+.login-card {
+    background-color: var(--card-background-color);
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-card h2 {
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+/* --- Shared Component Styles (can be used on other pages too) --- */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+    /* QUAN TRỌNG: Đặt position: relative để icon con mắt được định vị bên trong nó. */
+    position: relative;
+}
+
+.input-group label {
+    position: relative;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    /* Tăng padding bên phải để có không gian cho icon */
+    padding: 12px 40px 12px 15px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    /* 
+     * Định vị icon từ trên xuống. Giá trị này được điều chỉnh thủ công
+     * để đặt icon vào giữa ô input, sau khi tính toán cả chiều cao của label.
+     */
+    top: 38px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.2rem;
+    color: #757575; /* Thêm màu cho icon để dễ nhìn hơn */
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--input-focus-border-color);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+button {
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+button:disabled {
+    background-color: #b0c4de;
+    cursor: not-allowed;
+}
+
+#login-btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.form-switch {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.form-switch a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.message-box {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+    /* Hidden by default */
+}
+
+.message-box.error {
+    background-color: #ffebee;
+    color: var(--error-color);
+    display: block;
+}
+
+.message-box.success {
+    background-color: #e8f5e9;
+    color: var(--success-color);
+    display: block;
+}
+
+.message-box.info {
+    background-color: #e3f2fd;
+    color: var(--info-color);
+    display: block;
+}
+
+/* --- Styles for index.html (Control Panel) to ensure consistency --- */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển - ChemBet</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 
+        QUAN TRỌNG: Tải file config.js để lấy APP_SECRET.
+        File này phải được tải trước app_control.js để đảm bảo window.APP_SECRET tồn tại.
+    -->
+    <script src="/js/config.js" defer></script>
+    <script src="/js/modules/app_control.js" defer></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Bảng điều khiển ChemBet</h1>
+            <button id="logout-btn">Đăng xuất</button>
+        </header>
+        <main>
+            <h2>Chào mừng bạn đã đăng nhập thành công!</h2>
+            <p>Đây là nơi hiển thị các chức năng chính của ứng dụng.</p>
+        </main>
+    </div>
+    <!-- Gắn script "bảo vệ" vào trang -->
+    <script src="/js/modules/dashboard_ui.js" defer></script>
+</body>
+
+</html>
