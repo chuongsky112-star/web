@@ -18,10 +18,8 @@ app = FastAPI()
 # Nó cho phép trình duyệt ở frontend (vd: your-app.netlify.app)
 # có thể gửi yêu cầu đến backend (vd: your-api.onrender.com).
 origins = [
-    "https://gleaming-flan-0a1881.netlify.app", # URL production của Netlify
-    "http://localhost", # Dành cho phát triển local
-    "http://localhost:8080", # Thêm các port dev phổ biến nếu cần
-    "http://127.0.0.1", # Dành cho phát triển local
+    "*" # Cho phép tất cả các nguồn. Tốt cho dev, nhưng trong production nên giới hạn lại.
+    # Ví dụ: "https://gleaming-flan-0a1881.netlify.app"
 ]
 
 app.add_middleware(

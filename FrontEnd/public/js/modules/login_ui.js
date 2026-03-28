@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config";
+import { CONFIG } from "../config";
 // IIFE (Immediately Invoked Function Expression) để chạy ngay lập tức.
 // "Bảo vệ" cho trang đăng nhập: nếu người dùng đã có token (đã đăng nhập),
 // tự động chuyển hướng họ đến trang dashboard để tránh việc đăng nhập lại không cần thiết.
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- KẾT THÚC THAY ĐỔI ---
         // --- GỌI API THẬT ---
         // --- LOGIC ĐĂNG NHẬP ---
-        fetch(`${API_BASE_URL}/api/login`, {
+        fetch(`${CONFIG.API_BASE_URL}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,5 +1,7 @@
 // --- "BẢO VỆ" CHO TRANG DASHBOARD ---
 
+import { connectWebSocket } from "./app_control";
+
 // IIFE (Immediately Invoked Function Expression) để chạy ngay lập tức
 (function checkAuthentication() {
     const accessToken = localStorage.getItem('accessToken');
@@ -9,6 +11,9 @@
         console.warn('Chưa đăng nhập! Đang chuyển hướng về trang login...');
         // Dùng replace để người dùng không thể nhấn "Back" quay lại trang dashboard.
         window.location.replace('/login'); // Chuyển hướng về URL không có .html
+    } else {
+        // Nếu đã xác thực, khởi tạo kết nối WebSocket
+        connectWebSocket(accessToken);
     }
 })(); // Dấu () ở cuối để gọi hàm ngay lập tức
 
