@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from db.database import get_db
-from schemas.user import User
+from model.user import User
 from schemas.user import UserCreate, UserLogin
 from core import security
 
