@@ -1,5 +1,6 @@
 import uvicorn
 import threading
+import os
 from fastapi import FastAPI, Response
 
 # Import các module
@@ -34,14 +35,20 @@ app.include_router(desktop_utils.router)
 frontend_serving.setup_frontend_serving(app)
 
 if __name__ == "__main__":
-    APP_PORT = 5000
+    # Cấu hình cho deployment trên các nền tảng như Render:
+    # - Host: "0.0.0.0" để server có thể được truy cập từ bên ngoài container.
+    # - Port: Đọc từ biến môi trường `PORT` do nền tảng cung cấp, mặc định là 5000 cho local dev.
+    APP_HOST = "0.0.0.0"
+    APP_PORT = int(os.environ.get("PORT", 5000))
 
-    # Chống mở nhiều instance: Đánh thức tab cũ và tự động thoát trong im lặng
-    if desktop_utils.is_app_already_running(APP_PORT):
-        desktop_utils.focus_existing_app(APP_PORT)
+    # Các logic dưới đây dành riêng cho môi trường desktop và sẽ gây lỗi khi deploy.
+    # Chúng ta sẽ vô hiệu hóa chúng khi deploy lên server.
+    # if desktop_utils.is_app_already_running(APP_PORT):
+    #     desktop_utils.focus_existing_app(APP_PORT)
+    #
+    # # Tự động mở trình duyệt cũng không cần thiết trên server.
+    # threading.Timer(1.5, desktop_utils.open_browser, args=[APP_PORT]).start()
 
-    # Lên lịch mở trình duyệt sau khi server có thời gian khởi động
-    threading.Timer(1.5, desktop_utils.open_browser, args=[APP_PORT]).start()
-
-    # [SCALE 50 PROFILE] Uvicorn/FastAPI chạy chung event loop cực kỳ tối ưu, xoá bỏ xung đột Threading
-    uvicorn.run(app, host="127.0.0.1", port=APP_PORT, log_level="debug")
+    # Chạy server Uvicorn với cấu hình cho deployment.
+    # log_level="info" là lựa chọn tốt cho môi trường production.
+    uvicorn.run(app, host=APP_HOST, port=APP_PORT, log_level="info")
