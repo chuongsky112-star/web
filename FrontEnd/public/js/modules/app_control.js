@@ -103,4 +103,3 @@ class AppController {
 }
 // Khởi tạo controller với URL WebSocket từ file cấu hình tập trung.
 new AppController(WS_URL);
-// Biến file này thành một module để cho phép `declare global`.
