@@ -101,10 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- GỌI API THẬT ---
         // --- LOGIC ĐĂNG NHẬP ---
-        fetch(`${API_BASE_URL}/login`, {
+        fetch(`${API_BASE_URL}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                // Đã xóa 'X-App-Secret' không còn cần thiết
             },
             body: JSON.stringify({ username, password }),
         })

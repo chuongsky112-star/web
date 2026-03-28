@@ -1,4 +1,4 @@
-"use strict";
+import { API_BASE_URL } from "../config";
 // IIFE (Immediately Invoked Function Expression) để chạy ngay lập tức.
 // "Bảo vệ" cho trang đăng nhập: nếu người dùng đã có token (đã đăng nhập),
 // tự động chuyển hướng họ đến trang dashboard để tránh việc đăng nhập lại không cần thiết.
@@ -75,11 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- KẾT THÚC THAY ĐỔI ---
         // --- GỌI API THẬT ---
         // --- LOGIC ĐĂNG NHẬP ---
-        fetch('/api/login', {
+        fetch(`${API_BASE_URL}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-App-Secret': window.APP_SECRET || '', // Gửi chìa khóa bí mật trong header
+                // Đã xóa 'X-App-Secret' không còn cần thiết
             },
             body: JSON.stringify({ username, password }),
         })

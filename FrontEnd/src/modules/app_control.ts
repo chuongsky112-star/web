@@ -61,7 +61,7 @@ class AppController {
             const identifyPayload = {
                 type: "IDENTIFY",
                 role: "ui",
-                apiKey: this.apiKey // Gửi kèm token JWT (có thể là null)
+                apiKey: this.apiKey // Chỉ gửi token JWT, không cần secret
             };
             console.log('[AppController] Sending IDENTIFY message:', identifyPayload);
             // Gửi tin nhắn xác thực ngay khi kết nối thành công
@@ -111,10 +111,6 @@ class AppController {
                 // Không thử kết nối lại khi token đã sai.
                 return;
             }
-            
-            // Đối với các lỗi khác (ví dụ: mất mạng), thử kết nối lại.
-            console.log(`Reconnecting in ${this.reconnectInterval / 1000}s.`);
-            this.reconnectTimer = window.setTimeout(() => this.connect(), this.reconnectInterval);
         };
  
         this.ws.onerror = (error) => {

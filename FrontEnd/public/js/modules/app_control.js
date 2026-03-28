@@ -1,12 +1,13 @@
-"use strict";
 /**
  * app_control.ts
  * Module này chịu trách nhiệm duy trì kết nối WebSocket với backend.
- * Mục đích chính:
- * 1. Báo cho backend biết rằng giao diện người dùng (tab trình duyệt) đang hoạt động.
- * 2. Khi tab này bị đóng, kết nối WebSocket sẽ tự động ngắt. Backend sẽ nhận thấy
- *    điều này và có thể tự động tắt tiến trình server để giải phóng tài nguyên.
+ * Nó xử lý các tác vụ sau:
+ * 1. Thiết lập và tự động kết nối lại WebSocket.
+ * 2. Gửi token xác thực (JWT) để định danh người dùng.
+ * 3. Xử lý các sự kiện của kết nối (mở, đóng, lỗi) và thực hiện các hành động tương ứng,
+ *    như chuyển hướng người dùng khi token hết hạn.
  */
+import { WS_URL } from "../config";
 // Logic để xử lý chuyển hướng ở trang gốc.
 // Nếu người dùng truy cập vào trang gốc ('/') hoặc 'index.html', chuyển hướng họ đến trang đăng nhập.
 // Điều này đảm bảo người dùng luôn bắt đầu từ một luồng có chủ đích.
@@ -50,8 +51,7 @@ class AppController {
             const identifyPayload = {
                 type: "IDENTIFY",
                 role: "ui",
-                apiKey: this.apiKey, // Gửi kèm token JWT (có thể là null)
-                appSecret: window.APP_SECRET || '' // Gửi kèm chìa khóa bí mật
+                apiKey: this.apiKey // Chỉ gửi token JWT, không cần secret
             };
             console.log('[AppController] Sending IDENTIFY message:', identifyPayload);
             // Gửi tin nhắn xác thực ngay khi kết nối thành công
@@ -85,24 +85,15 @@ class AppController {
                 // Xóa token đã hết hạn khỏi bộ nhớ
                 localStorage.removeItem('accessToken');
                 this.apiKey = null; // QUAN TRỌNG: Reset apiKey trong instance để lần kết nối lại không dùng token cũ
-            }
-            else if (event.code === 4002) { // Mã lỗi mới cho App Secret không hợp lệ
-                console.error('[AppController] CRITICAL: App Secret validation failed. This could be an attack. Halting all operations.');
-                // Xóa token đã hết hạn khỏi bộ nhớ
-                localStorage.removeItem('accessToken');
-                this.apiKey = null; // Reset apiKey cho nhất quán
-                // Chỉ chuyển hướng nếu người dùng không ở trang đăng nhập để tránh vòng lặp
+                // Chuyển hướng về trang đăng nhập để người dùng không bị kẹt.
+                // Tránh chuyển hướng nếu đã ở trang đăng nhập để không tạo vòng lặp.
                 if (window.location.pathname !== '/login' && window.location.pathname !== '/login.html') {
-                    console.log('[AppController] Redirecting to login page.');
-                    // Chuyển hướng người dùng về trang đăng nhập
+                    console.log('[AppController] Redirecting to login page due to invalid token.');
                     window.location.href = '/login';
                 }
-                // Không thử kết nối lại khi có lỗi xác thực
+                // Không thử kết nối lại khi token đã sai.
                 return;
             }
-            // Đối với các lỗi khác (ví dụ: mất mạng), thử kết nối lại.
-            console.log(`Reconnecting in ${this.reconnectInterval / 1000}s.`);
-            this.reconnectTimer = window.setTimeout(() => this.connect(), this.reconnectInterval);
         };
         this.ws.onerror = (error) => {
             console.error('[AppController] WebSocket error:', error);
@@ -110,7 +101,6 @@ class AppController {
         };
     }
 }
-// Khởi tạo controller ngay khi script được tải.
-// Điều này đảm bảo kết nối được thiết lập trên bất kỳ trang nào có nhúng script này.
-new AppController('ws://127.0.0.1:5000/ws');
+// Khởi tạo controller với URL WebSocket từ file cấu hình tập trung.
+new AppController(WS_URL);
 // Biến file này thành một module để cho phép `declare global`.
