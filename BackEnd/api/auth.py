@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from db.database import get_db
-from schemas.user import UserCreate, UserLogin, user as User
+from schemas.user import UserCreate, UserLogin, User
 from core import security
 
 router = APIRouter(tags=["Authentication"])
