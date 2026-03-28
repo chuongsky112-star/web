@@ -36,7 +36,7 @@ class ConnectionManager:
             logger.debug(f"Token validation failed for UI websocket: {e}")
             return False
 
-    async def connect(self, websocket: WebSocket, role: str, identifier: str = None, api_key: str = None, app_secret: str = None):
+    async def connect(self, websocket: WebSocket, role: str, identifier: str = None, api_key: str = None):
         """Lưu trữ một kết nối đã được chấp nhận dựa trên vai trò."""
         if role == "extension" and identifier:
             # Nếu đã có kết nối với UUID này, đóng kết nối cũ
@@ -46,12 +46,6 @@ class ConnectionManager:
             self.active_extensions[identifier] = websocket
             logger.info(f"Extension connected: {identifier}")
         elif role == "ui":
-            # --- BẢO MẬT TỐI ƯU: KIỂM TRA CHÌA KHÓA BÍ MẬT KHỞI ĐỘNG ---
-            if not app_secret or not security.secrets.compare_digest(app_secret, security.APP_SECRET):
-                logger.critical("CRITICAL: WebSocket connection attempt with invalid App Secret. Possible attack. Closing.")
-                await websocket.close(code=4002, reason="Invalid App Secret")
-                return False
-
             # --- LOGIC XÁC THỰC TOKEN CHO UI ---
             # Nếu có api_key (JWT token), nó PHẢI hợp lệ.
             # Nếu không có api_key, ta vẫn cho phép kết nối (dành cho trang login).
@@ -173,8 +167,7 @@ async def websocket_endpoint(websocket: WebSocket):
             elif role == "ui":
                 client_id = "ui_client" # Gán một id tượng trưng
                 api_key = data.get("apiKey") # JWT token
-                app_secret = data.get("appSecret") # Chìa khóa bí mật
-                if not await manager.connect(websocket, role="ui", api_key=api_key, app_secret=app_secret):
+                if not await manager.connect(websocket, role="ui", api_key=api_key):
                     return # Kết nối thất bại
             else:
                 logger.warning(f"Connection received with unknown role: {role}. Closing.")

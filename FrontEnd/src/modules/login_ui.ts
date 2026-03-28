@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../config";
+
 // Định nghĩa một "khuôn mẫu" (interface) cho dữ liệu phản hồi từ API.
 // Điều này giúp TypeScript hiểu rõ cấu trúc của `data` và cung cấp gợi ý code,
 // đồng thời bắt lỗi nếu server trả về dữ liệu sai cấu trúc.
@@ -99,11 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- GỌI API THẬT ---
         // --- LOGIC ĐĂNG NHẬP ---
-        fetch('/api/login', {
+        fetch(`${API_BASE_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-App-Secret': window.APP_SECRET || '', // Gửi chìa khóa bí mật trong header
             },
             body: JSON.stringify({ username, password }),
         })
