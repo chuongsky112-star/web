@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import các module
 from core import websocket_manager
 from api import auth
-from config import middleware, security
+from config import middleware
 
 # Khởi tạo ứng dụng FastAPI.
 app = FastAPI()

@@ -4,7 +4,6 @@ from typing import Dict, Any, Optional
 import asyncio
 from threading import Timer
 from api import auth
-from config import security
 # Cấu hình logging cơ bản để theo dõi các sự kiện WebSocket
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
