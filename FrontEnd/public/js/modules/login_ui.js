@@ -1,4 +1,13 @@
 "use strict";
+// IIFE (Immediately Invoked Function Expression) để chạy ngay lập tức.
+// "Bảo vệ" cho trang đăng nhập: nếu người dùng đã có token (đã đăng nhập),
+// tự động chuyển hướng họ đến trang dashboard để tránh việc đăng nhập lại không cần thiết.
+(function protectLoginPage() {
+    if (localStorage.getItem('accessToken')) {
+        console.log('Đã đăng nhập, chuyển hướng tới dashboard...');
+        window.location.replace('/dashboard');
+    }
+})();
 document.addEventListener('DOMContentLoaded', () => {
     // Lấy tất cả các element cần thiết từ DOM
     const loginForm = document.getElementById('login-form');

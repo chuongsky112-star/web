@@ -7,6 +7,13 @@
  *    điều này và có thể tự động tắt tiến trình server để giải phóng tài nguyên.
  */
 
+// Logic để xử lý chuyển hướng ở trang gốc.
+// Nếu người dùng truy cập vào trang gốc ('/') hoặc 'index.html', chuyển hướng họ đến trang đăng nhập.
+// Điều này đảm bảo người dùng luôn bắt đầu từ một luồng có chủ đích.
+if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+    window.location.replace('/login');
+}
+
 class AppController {
     private ws: WebSocket | null = null;
     private url: string;
