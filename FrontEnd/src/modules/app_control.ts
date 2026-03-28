@@ -1,10 +1,11 @@
 /**
  * app_control.ts
  * Module này chịu trách nhiệm duy trì kết nối WebSocket với backend.
- * Mục đích chính:
- * 1. Báo cho backend biết rằng giao diện người dùng (tab trình duyệt) đang hoạt động.
- * 2. Khi tab này bị đóng, kết nối WebSocket sẽ tự động ngắt. Backend sẽ nhận thấy
- *    điều này và có thể tự động tắt tiến trình server để giải phóng tài nguyên.
+ * Nó xử lý các tác vụ sau:
+ * 1. Thiết lập và tự động kết nối lại WebSocket.
+ * 2. Gửi token xác thực (JWT) để định danh người dùng.
+ * 3. Xử lý các sự kiện của kết nối (mở, đóng, lỗi) và thực hiện các hành động tương ứng,
+ *    như chuyển hướng người dùng khi token hết hạn.
  */
 
 import { WS_URL } from "../config";

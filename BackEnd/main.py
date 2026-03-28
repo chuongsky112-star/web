@@ -1,11 +1,10 @@
 import uvicorn
-import threading
 import os
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import các module
-from core import websocket_manager, desktop_utils
+from core import websocket_manager
 from api import auth
 from config import middleware, security
 
@@ -17,9 +16,7 @@ app = FastAPI()
 # Nó cho phép trình duyệt ở frontend (vd: your-app.netlify.app)
 # có thể gửi yêu cầu đến backend (vd: your-api.onrender.com).
 origins = [
-    "http://localhost",
-    "http://localhost:8080", # Thêm các port dev phổ biến nếu cần
-    "https://your-frontend-app.netlify.app", # <--- QUAN TRỌNG: Thay bằng URL thật của frontend
+    "https://gleaming-flan-0a1881.netlify.app", # <--- QUAN TRỌNG: Thay bằng URL thật của frontend
 ]
 
 app.add_middleware(
@@ -44,14 +41,6 @@ if __name__ == "__main__":
     # - Port: Đọc từ biến môi trường `PORT` do nền tảng cung cấp, mặc định là 5000 cho local dev.
     APP_HOST = "0.0.0.0"
     APP_PORT = int(os.environ.get("PORT", 5000))
-
-    # Các logic dưới đây dành riêng cho môi trường desktop và sẽ gây lỗi khi deploy.
-    # Chúng ta sẽ vô hiệu hóa chúng khi deploy lên server.
-    # if desktop_utils.is_app_already_running(APP_PORT):
-    #     desktop_utils.focus_existing_app(APP_PORT)
-    #
-    # # Tự động mở trình duyệt cũng không cần thiết trên server.
-    # threading.Timer(1.5, desktop_utils.open_browser, args=[APP_PORT]).start()
 
     # Chạy server Uvicorn với cấu hình cho deployment.
     # log_level="info" là lựa chọn tốt cho môi trường production.

@@ -3,8 +3,6 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict, Any, Optional
 import asyncio
 from threading import Timer
-
-from . import app_shutdown
 from api import auth
 from config import security
 # Cấu hình logging cơ bản để theo dõi các sự kiện WebSocket
@@ -18,7 +16,6 @@ class ConnectionManager:
         self.active_extensions: Dict[str, WebSocket] = {}
         # Lưu kết nối UI, chỉ nên có một
         self.ui_connection: Optional[WebSocket] = None
-        self.shutdown_timer: Optional[Timer] = None
 
     def _is_token_valid(self, token: Optional[str]) -> bool:
         """
@@ -49,16 +46,10 @@ class ConnectionManager:
             # --- LOGIC XÁC THỰC TOKEN CHO UI ---
             # Nếu có api_key (JWT token), nó PHẢI hợp lệ.
             # Nếu không có api_key, ta vẫn cho phép kết nối (dành cho trang login).
-            # Việc này đảm bảo chức năng auto-shutdown hoạt động.
             if api_key and not self._is_token_valid(api_key):
                 logger.warning("UI connection attempt with invalid or expired API Key. Closing.")
                 await websocket.close(code=4001, reason="Invalid or expired API Key")
                 return False
-
-            if self.shutdown_timer and self.shutdown_timer.is_alive():
-                logger.info("UI reconnected, cancelling server shutdown.")
-                self.shutdown_timer.cancel()
-                self.shutdown_timer = None
 
             if self.ui_connection:
                 logger.warning("New UI connection received, closing the old one.")
@@ -88,11 +79,6 @@ class ConnectionManager:
         if self.ui_connection == websocket:
             self.ui_connection = None
             logger.info("UI disconnected.")
-            # Biện pháp an toàn: Hủy bất kỳ bộ đếm thời gian tắt máy nào hiện có trước khi lên lịch một bộ đếm mới.
-            # Điều này ngăn chặn các trường hợp cạnh tranh hiếm gặp có thể xảy ra.
-            if self.shutdown_timer and self.shutdown_timer.is_alive():
-                self.shutdown_timer.cancel()
-            self.shutdown_timer = app_shutdown.schedule_shutdown(delay=5.0)
             return
 
     async def send_to_extension(self, uuid: str, message: Dict[str, Any]):
