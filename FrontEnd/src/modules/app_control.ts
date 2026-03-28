@@ -129,8 +129,13 @@ class AppController {
     }
 }
 
-// Khởi tạo controller ngay khi script được tải.
-// Điều này đảm bảo kết nối được thiết lập trên bất kỳ trang nào có nhúng script này.
-new AppController('ws://127.0.0.1:5000/ws');
+// --- Khởi tạo WebSocket Controller ---
+// Tự động xác định URL cho WebSocket dựa trên môi trường (dev vs. production).
+// - Nếu trang được tải qua `https:`, sử dụng `wss:` (secure WebSocket).
+// - Nếu trang được tải qua `http:`, sử dụng `ws:`.
+// - `window.location.host` sẽ tự động trỏ đến đúng server (e.g., `localhost:5000` hoặc `web-22fs.onrender.com`).
+const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+const wsUrl = `${wsProtocol}//${window.location.host}/ws`;
+new AppController(wsUrl);
 
 // Biến file này thành một module để cho phép `declare global`.
